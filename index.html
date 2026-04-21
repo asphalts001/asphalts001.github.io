@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legacy — Study Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8cc7a;
+      --gold-dim:   #8a6f2e;
+      --parchment:  #f5edd8;
+      --ink:        #0a0a0f;
+      --ink-mid:    #1a1a24;
+      --ink-soft:   #2c2c3a;
+      --text-body:  #d4c4a0;
+      --text-muted: #7a6d56;
+      --accent:     #b8860b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ink);
+      color: var(--text-body);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      overflow: hidden;
+    }
+
+    .header-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
+        linear-gradient(180deg, #0a0a0f 0%, #12101a 50%, #0a0a0f 100%);
+      z-index: -1;
+    }
+
+    /* decorative rule lines */
+    .rule-top, .rule-bottom {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+    }
+    .rule-top { top: 3rem; }
+    .rule-bottom { bottom: 3rem; }
+
+    .header-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .header-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(4rem, 14vw, 10rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dim) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    .header-divider {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.5rem auto;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .header-subtitle {
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--parchment);
+      max-width: 560px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .header-platform {
+      margin-top: 2.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1s;
+    }
+
+    .header-cta {
+      margin-top: 3rem;
+      display: inline-block;
+      padding: 0.85rem 2.8rem;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.2s;
+    }
+    .header-cta:hover {
+      background: rgba(201,168,76,0.1);
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.6s;
+    }
+    .scroll-hint span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(180deg, var(--gold-dim), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      position: relative;
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 600;
+      color: var(--parchment);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-rule {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .about-body {
+      font-size: 1.1rem;
+      color: var(--text-body);
+      line-height: 1.9;
+    }
+    .about-body p + p { margin-top: 1.2rem; }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      border-left: 1px solid var(--gold-dim);
+      padding-left: 1.5rem;
+    }
+    .stat-number {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      font-style: italic;
+    }
+
+    /* ── FEATURES ── */
+    .features-section {
+      background: linear-gradient(180deg, transparent, rgba(201,168,76,0.03), transparent);
+      border-top: 1px solid rgba(201,168,76,0.08);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      max-width: 100%;
+      padding: 6rem 2rem;
+    }
+
+    .features-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      padding: 2rem;
+      border: 1px solid rgba(201,168,76,0.12);
+      background: rgba(201,168,76,0.02);
+      position: relative;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 30px; height: 1px;
+      background: var(--gold);
+    }
+    .feature-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      background: rgba(201,168,76,0.05);
+    }
+
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .feature-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── TECH ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .tech-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+    }
+
+    .tech-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold-dim);
+      letter-spacing: 0.1em;
+      min-width: 120px;
+    }
+
+    .tech-val {
+      font-size: 0.95rem;
+      color: var(--text-body);
+    }
+
+    /* ── PRIVACY / POLICY ── */
+    .policy-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .policy-box {
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 3rem;
+      background: rgba(201,168,76,0.02);
+      margin-top: 3rem;
+    }
+
+    .policy-box h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin: 1.5rem 0 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    .policy-box h3:first-child { margin-top: 0; }
+
+    .policy-box p, .policy-box li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .policy-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .policy-box ul li::before {
+      content: '— ';
+      color: var(--gold-dim);
+    }
+
+    .policy-box a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .policy-box a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .footer-meta {
+      margin-top: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(122,109,86,0.5);
+      text-transform: uppercase;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.06);
+    }
+
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* ── FULL-WIDTH DIVIDER ── */
+    .full-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent);
+      margin: 0;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .policy-box { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">LEGACY</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#technical">Technical</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header>
+    <div class="header-bg"></div>
+    <div class="rule-top"></div>
+    <div class="rule-bottom"></div>
+
+    <p class="header-eyebrow">Android Study Companion · Apache Cordova</p>
+    <h1 class="header-title">LEGACY</h1>
+    <div class="header-divider"></div>
+    <p class="header-subtitle">A hybrid study companion forged for competitive examination preparation — chemistry, physics, and performance analytics in one application.</p>
+    <p class="header-platform">Platform: Android SDK 29–34 &nbsp;·&nbsp; Package: com.asphalts001.legacy</p>
+    <a href="#about" class="header-cta">Explore the Application</a>
+
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </header>
+
+  <div class="full-divider"></div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">01 · Overview</p>
+    <h2 class="section-title">Built for Serious<br/>Examination Preparation</h2>
+    <div class="section-rule"></div>
+
+    <div class="about-grid">
+      <div class="about-body">
+        <p>Legacy is a hybrid Android application built with Apache Cordova, designed as a comprehensive study companion for students preparing for competitive examinations including NEET.</p>
+        <p>The application delivers a richly styled WebView interface combining static reference material, two independent quiz engines, real-time performance tracking, and optional cloud synchronisation — all within a single, self-contained APK.</p>
+        <p>Study sessions are logged, scored, and persisted locally. Progress is surfaced through a live dashboard with accuracy metrics, recent activity feeds, and exportable JSON logs. For multi-device continuity, a manual Supabase cloud sync transfers session data on demand.</p>
+      </div>
+
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-number">24</div>
+          <div class="stat-label">External JSON question sets</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">45</div>
+          <div class="stat-label">Adversarial physics trap questions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Chemistry disciplines covered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">60 min</div>
+          <div class="stat-label">NEET-scored timed MCQ sessions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- FEATURES -->
+  <div class="features-section" id="features">
+    <div class="features-inner">
+      <p class="section-label">02 · Capabilities</p>
+      <h2 class="section-title">Everything in One Place</h2>
+      <div class="section-rule"></div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚗️</div>
+          <div class="feature-name">Chemistry Compendium</div>
+          <p class="feature-desc">A searchable, tabbed reference covering Inorganic, Physical, and Organic chemistry with inline search filtering and named-reaction highlights.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-name">JSON Quiz Factory</div>
+          <p class="feature-desc">Configurable MCQ runner loading from 24 external JSON question sets. Full NEET scoring, 60-minute sessions, and per-set attempt history.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-name">Adversarial Physics</div>
+          <p class="feature-desc">45 hard-coded trap questions across seven difficulty categories, with a live timer and type-wise performance breakdown after each session.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-name">Dashboard & Analytics</div>
+          <p class="feature-desc">Real-time accuracy metrics, session tracking, recent activity feed, and one-tap JSON export of your complete study log.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">☁️</div>
+          <div class="feature-name">Cloud Sync</div>
+          <p class="feature-desc">Manual push/pull synchronisation of activity logs via a Supabase edge function. Keep your progress consistent across devices.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎵</div>
+          <div class="feature-name">Background Audio</div>
+          <p class="feature-desc">Persistent music playback using the Cordova Media plugin. Per-session preference storage keeps your study atmosphere consistent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="full-divider"></div>
+
+  <!-- TECHNICAL -->
+  <section id="technical">
+    <p class="section-label">03 · Technical</p>
+    <h2 class="section-title">Architecture &<br/>Build Details</h2>
+    <div class="section-rule"></div>
+
+    <div class="tech-grid">
+      <div>
+        <div class="tech-row">
+          <span class="tech-key">Framework</span>
+          <span class="tech-val">Apache Cordova 12</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Platform</span>
+          <span class="tech-val">Android SDK 29 – 34</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Identifier</span>
+          <span class="tech-val">com.asphalts001.legacy</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Entry Point</span>
+          <span class="tech-val">index.html (WebView)</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Build</span>
+          <span class="tech-val">GitHub Actions CI</span>
+        </div>
+      </div>
+      <div>
+        <div class="tech-row">
+          <span class="tech-key">Runtime</span>
+          <span class="tech-val">Node 18 · JDK 17 · Gradle 8.7</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">State</span>
+          <span class="tech-val">localStorage via StateManager.js</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Cloud</span>
+          <span class="tech-val">Supabase Edge Functions</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Auth</span>
+          <span class="tech-val">Google OAuth 2.0</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Audio Plugin</span>
+          <span class="tech-val">cordova-plugin-media ^6.1.0</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- PRIVACY -->
+  <div class="policy-section" id="privacy">
+    <p class="section-label">04 · Privacy Policy</p>
+    <h2 class="section-title">How We Handle<br/>Your Data</h2>
+    <div class="section-rule"></div>
+    <p style="font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--text-muted); letter-spacing:0.1em;">Last updated: April 21, 2026</p>
+
+    <div class="policy-box">
+
+      <h3>1. Overview</h3>
+      <p>Legacy uses Google Sign-In to authenticate users. 
