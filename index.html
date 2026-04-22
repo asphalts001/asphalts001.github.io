@@ -479,6 +479,189 @@
       50%       { opacity: 1; }
     }
 
+    /* ── UPDATES ── */
+    .updates-section {
+      background: linear-gradient(180deg, transparent, rgba(201,168,76,0.03), transparent);
+      border-top: 1px solid rgba(201,168,76,0.08);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      max-width: 100%;
+      padding: 6rem 2rem;
+    }
+
+    .updates-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .updates-list {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .update-entry {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 2.5rem;
+      padding: 2.2rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      position: relative;
+    }
+    .update-entry:first-child { border-top: 1px solid rgba(201,168,76,0.08); }
+
+    .update-entry::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 2px; height: 0;
+      background: var(--gold);
+      transition: height 0.4s ease;
+    }
+    .update-entry:hover::before { height: 100%; }
+
+    .update-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-top: 0.15rem;
+    }
+
+    .update-version {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+    }
+
+    .update-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .update-badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.2rem 0.65rem;
+      border: 1px solid var(--gold-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+    }
+
+    .update-badge.new {
+      border-color: rgba(201,168,76,0.5);
+      color: var(--gold-light);
+      background: rgba(201,168,76,0.06);
+    }
+
+    .update-body { }
+
+    .update-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--parchment);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.7rem;
+    }
+
+    .update-desc {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .update-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .update-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      padding: 0.2rem 0.6rem;
+      background: rgba(201,168,76,0.05);
+      border: 1px solid rgba(201,168,76,0.1);
+      color: var(--gold-dim);
+      text-transform: uppercase;
+    }
+
+    /* ── DOWNLOAD ── */
+    .download-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding: 1.1rem 3.2rem;
+      background: linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.06) 100%);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.22em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .download-btn:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 30px rgba(201,168,76,0.15);
+    }
+    .download-btn:hover::before { opacity: 1; }
+
+    .download-btn svg {
+      width: 16px; height: 16px;
+      fill: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .download-notice {
+      margin-top: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .download-notice .notice-icon {
+      display: inline-block;
+      margin-right: 0.3em;
+      color: var(--gold-dim);
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
@@ -487,6 +670,7 @@
       .features-grid { grid-template-columns: 1fr; }
       .tech-grid { grid-template-columns: 1fr; }
       .policy-box { padding: 2rem 1.5rem; }
+      .update-entry { grid-template-columns: 1fr; gap: 0.75rem; }
     }
   </style>
 </head>
@@ -499,6 +683,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#features">Features</a></li>
       <li><a href="#technical">Technical</a></li>
+      <li><a href="#updates">Updates</a></li>
       <li><a href="#privacy">Privacy</a></li>
     </ul>
   </nav>
@@ -524,6 +709,31 @@
 
   <div class="full-divider"></div>
 
+  <!-- DOWNLOAD -->
+  <div class="full-divider"></div>
+  <div class="download-section" id="download">
+    <p class="section-label" style="text-align:center;">Get the App</p>
+    <h2 class="section-title" style="text-align:center;">Download Latest<br/>Version</h2>
+    <div class="section-rule" style="margin-left:auto;margin-right:auto;"></div>
+    <p style="font-size:1rem; color:var(--text-muted); max-width:480px; margin:1rem auto 0; text-align:center; font-style:italic;">
+      The latest build is always available directly from GitHub Releases. No account required.
+    </p>
+
+    <a href="https://github.com/asphalts001/downloads/releases/download/v1.0.98/legacy-v1.0.98.apk"
+       class="download-btn" download>
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/>
+      </svg>
+      Download v1.0.98 APK
+    </a>
+
+    <p class="download-notice">
+      <span class="notice-icon">⚠</span>
+      Google Play Protect may flag this file during installation as the app is not yet listed on the Play Store. This is expected behaviour for sideloaded APKs. Tap <em>"Install anyway"</em> on the warning prompt to proceed safely.
+    </p>
+  </div>
+
+  <div class="full-divider"></div
   <!-- ABOUT -->
   <section id="about">
     <p class="section-label">01 · Overview</p>
@@ -540,19 +750,18 @@
       <div class="about-stats">
         <div class="stat-item">
           <div class="stat-number">24</div>
-          <div class="stat-label">External JSON question sets</div>
+          <div class="stat-label">Mcq sets covering complete subject of biology</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">45</div>
-          <div class="stat-label">Adversarial physics trap questions</div>
+          <div class="stat-number">Quick sheets </div>
+          <div class="stat-label">Complete covergae of physics n chemistry in extreme efficiency</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Chemistry disciplines covered</div>
+          
         </div>
         <div class="stat-item">
-          <div class="stat-number">60 min</div>
-          <div class="stat-label">NEET-scored timed MCQ sessions</div>
+          <div class="stat-number">1min/Q</div>
+          <div class="stat-label">Dynamicaly timed MCQ sessions</div>
         </div>
       </div>
     </div>
@@ -569,37 +778,37 @@
 
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">⚗️</div>
+          
           <div class="feature-name">Chemistry Compendium</div>
           <p class="feature-desc">A searchable, tabbed reference covering Inorganic, Physical, and Organic chemistry with inline search filtering and named-reaction highlights.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">⚡</div>
+          
           <div class="feature-name">JSON Quiz Factory</div>
           <p class="feature-desc">Configurable MCQ runner loading from 24 external JSON question sets. Full NEET scoring, 60-minute sessions, and per-set attempt history.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">🎯</div>
+          
           <div class="feature-name">Adversarial Physics</div>
           <p class="feature-desc">45 hard-coded trap questions across seven difficulty categories, with a live timer and type-wise performance breakdown after each session.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">📊</div>
+          
           <div class="feature-name">Dashboard & Analytics</div>
           <p class="feature-desc">Real-time accuracy metrics, session tracking, recent activity feed, and one-tap JSON export of your complete study log.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">☁️</div>
+          
           <div class="feature-name">Cloud Sync</div>
           <p class="feature-desc">Manual push/pull synchronisation of activity logs via a Supabase edge function. Keep your progress consistent across devices.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">🎵</div>
+          
           <div class="feature-name">Background Audio</div>
           <p class="feature-desc">Persistent music playback using the Cordova Media plugin. Per-session preference storage keeps your study atmosphere consistent.</p>
         </div>
@@ -665,9 +874,86 @@
 
   <div class="full-divider"></div>
 
+  <!-- UPDATES -->
+  <div class="updates-section" id="updates">
+    <div class="updates-inner">
+      <p class="section-label">04 · Updates</p>
+      <h2 class="section-title">What's New in<br/>Legacy</h2>
+      <div class="section-rule"></div>
+
+      <div class="updates-list">
+
+        <!-- v1.0.98 — latest -->
+        <div class="update-entry">
+          <div class="update-meta">
+            <span class="update-version">v1.0.98</span>
+            <span class="update-date">April 2026</span>
+            <span class="update-badge new">Latest</span>
+          </div>
+          <div class="update-body">
+            <div class="update-title">Egyptian  — Physics Reference Module</div>
+            <p class="update-desc">
+              A brand-new immersive reference module inspired by ancient Egyptian manuscripts has been added to Legacy. Styled as a royal parchment scroll with ornamental borders, hieroglyphic motifs, and gold-leaf typography, the Egyptian module presents physics commandments — Newton's laws, electromagnetism, optics, thermodynamics, and wave mechanics — in a richly designed, filterable interface. Each law is laid out as a royal decree with clearly separated name, formula, and plain-language explanation. The module is fully searchable by keyword across title, formula, and description fields, and adapts gracefully to mobile viewports.
+            </p>
+            <div class="update-tags">
+              <span class="update-tag">New Module</span>
+              <span class="update-tag">Physics Reference</span>
+              <span class="update-tag">Egyptian Theme</span>
+              <span class="update-tag">Searchable</span>
+              <span class="update-tag">Responsive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- v1.0.90 -->
+        <div class="update-entry">
+          <div class="update-meta">
+            <span class="update-version">v1.0.90</span>
+            <span class="update-date">March 2026</span>
+            <span class="update-badge">Release</span>
+          </div>
+          <div class="update-body">
+            <div class="update-title">Cloud Sync & Dashboard Improvements</div>
+            <p class="update-desc">
+              Introduced manual Supabase cloud sync for session logs across devices. Dashboard accuracy metrics now update in real time, and the activity feed surfaces your five most recent sessions with per-set attempt history. JSON export of the complete study log added to settings.
+            </p>
+            <div class="update-tags">
+              <span class="update-tag">Cloud Sync</span>
+              <span class="update-tag">Dashboard</span>
+              <span class="update-tag">Analytics</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- v1.0.80 -->
+        <div class="update-entry">
+          <div class="update-meta">
+            <span class="update-version">v1.0.80</span>
+            <span class="update-date">February 2026</span>
+            <span class="update-badge">Release</span>
+          </div>
+          <div class="update-body">
+            <div class="update-title">Adversarial Physics Engine & Background Audio</div>
+            <p class="update-desc">
+              Added 45 hard-coded adversarial physics trap questions across seven difficulty categories with a live countdown timer and type-wise performance breakdown. Persistent background audio via the Cordova Media plugin introduced, with per-session preference storage.
+            </p>
+            <div class="update-tags">
+              <span class="update-tag">Physics</span>
+              <span class="update-tag">Quiz Engine</span>
+              <span class="update-tag">Audio</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  
   <!-- PRIVACY -->
   <div class="policy-section" id="privacy">
-    <p class="section-label">04 · Privacy Policy</p>
+    <p class="section-label">05 · Privacy Policy</p>
     <h2 class="section-title">How We Handle<br/>Your Data</h2>
     <div class="section-rule"></div>
     <p style="font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--text-muted); letter-spacing:0.1em;">Last updated: April 21, 2026</p>
@@ -724,3 +1010,14 @@
       <p>If you have any questions or concerns about this privacy policy, please open an issue on the project's GitHub repository at <a href="https://github.com/asphalts001" target="_blank">github.com/asphalts001</a>.</p>
 
     </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-title">LEGACY</div>
+    <p class="footer-sub">A hybrid study companion for serious examination preparation</p>
+    <p class="footer-meta">© 2026 asphalts001 · Apache Cordova · Android SDK 29–34 · com.asphalts001.legacy</p>
+  </footer>
+
+</body>
+</html>
