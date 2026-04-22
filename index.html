@@ -2,729 +2,548 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Legacy — Study Companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Legacy · Royal Study Companion</title>
+
+  <!-- ⚜️ THEME: exact royal palette & typography from theme.css -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
+    /* ── ROYAL CORE (theme.css tokens + extended homepage) ── */
+    :root {
+      --ink: #0e0b07;
+      --parchment: #f5edd8;
+      --parchment-dark: #ede0c4;
+      --parchment-mid: #f0e6ce;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-deep: #8a6420;
+      --crimson: #8b1a1a;
+      --crimson-light: #b32020;
+      --navy: #1a2540;
+      --navy-light: #243259;
+      --border-ornate: #b8962e;
+      --text-body: #1e1408;
+      --text-muted: #5c4a2a;
+      --text-accent: #8b1a1a;
+      --surface: #f9f2e3;
+      --surface-alt: #f2e8d0;
+      --shadow: rgba(10,7,2,0.18);
+      
+      /* compatibility */
+      --bg: var(--navy);
+      --surface2: var(--parchment-dark);
+      --border: var(--border-ornate);
+      --border-hi: var(--gold-light);
+      --text: var(--text-body);
+      --text-on-dark: var(--gold-light);
+      --muted: var(--text-muted);
+      --muted-on-dark: #a08c60;
+      --accent: #7c5c10;
+      --accent-on-dark: var(--gold-light);
+      --chem: #1a6b66;
+      --phys: var(--navy);
+      --mcq: var(--crimson);
+      --green: #4caf7d;
+      --red: var(--crimson);
+      --accent2: var(--crimson);
+      --accent3: var(--gold);
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --gold:       #c9a84c;
-      --gold-light: #e8cc7a;
-      --gold-dim:   #8a6f2e;
-      --parchment:  #f5edd8;
-      --ink:        #0a0a0f;
-      --ink-mid:    #1a1a24;
-      --ink-soft:   #2c2c3a;
-      --text-body:  #d4c4a0;
-      --text-muted: #7a6d56;
-      --accent:     #b8860b;
-    }
-
-    html { scroll-behavior: smooth; }
-
     body {
-      background-color: var(--ink);
+      background: var(--navy);
+      background-image:
+        radial-gradient(ellipse at 20% 20%, #1e2d52 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, #0d1a30 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a84c' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
       color: var(--text-body);
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 18px;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: relative;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.65;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── parchment cards & surfaces (exact theme.css) ── */
+    .card, .policy-box, .feature-card, .about-stats .stat-item, .tech-row {
+      background: var(--parchment);
+      background-image: linear-gradient(160deg, #f9f2e3 0%, #f0e6ce 100%);
+      border: 1.5px solid var(--border-ornate);
+      box-shadow: 0 2px 12px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+      position: relative;
+    }
+
+    /* ornate top accent */
+    .card::before, .feature-card::before, .policy-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
+    }
+
+    /* navigation — royal frame */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+      background-image: linear-gradient(180deg, #f9f2e3 0%, #ede0c4 100%);
+      border-bottom: 3px solid var(--gold);
+      box-shadow: 0 0 0 1px var(--gold-deep), 0 4px 32px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+      padding: 0.8rem 2.5rem;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 4rem 2rem;
-      overflow: hidden;
+      justify-content: space-between;
+      backdrop-filter: none;
+    }
+    nav::before {
+      content: '';
+      position: absolute; inset: 5px;
+      border: 1px solid var(--gold-deep);
+      pointer-events: none; opacity: 0.35;
     }
 
-    .header-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
-        linear-gradient(180deg, #0a0a0f 0%, #12101a 50%, #0a0a0f 100%);
-      z-index: -1;
-    }
-
-    .rule-top, .rule-bottom {
-      position: absolute;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
-    }
-    .rule-top { top: 3rem; }
-    .rule-bottom { bottom: 3rem; }
-
-    .header-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold-dim);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.2s;
-    }
-
-    .header-title {
+    .nav-logo {
       font-family: 'Cinzel', serif;
-      font-size: clamp(4rem, 14vw, 10rem);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      line-height: 1;
-      background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dim) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.4s;
-    }
-
-    .header-divider {
-      width: 120px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 1.5rem auto;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.6s;
-    }
-
-    .header-subtitle {
-      font-size: clamp(1rem, 3vw, 1.35rem);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--parchment);
-      max-width: 560px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.8s;
-    }
-
-    .header-platform {
-      margin-top: 2.5rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
+      font-weight: 700;
+      font-size: 1.1rem;
       letter-spacing: 0.25em;
+      color: var(--navy);
+      text-decoration: none;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+    .nav-logo span { color: var(--gold-deep); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      position: relative;
+      z-index: 2;
+    }
+    .nav-links a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
       color: var(--text-muted);
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1s;
+      text-decoration: none;
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .nav-links a:hover { color: var(--navy); border-bottom-color: var(--gold); }
+
+    /* ── HEADER (royal parchment hero) ── */
+    .hero {
+      background: var(--parchment);
+      background-image: linear-gradient(160deg, #f9f2e3 0%, #ede0c4 100%);
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 0 1px var(--gold-deep), 0 8px 40px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+      margin: 24px 20px;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 8px;
+      border: 1px solid var(--gold-deep); opacity: 0.3; pointer-events: none;
     }
 
-    .header-cta {
-      margin-top: 3rem;
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--gold-deep);
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 12vw, 6.5rem);
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0.25em 0;
+    }
+    .hero h1 em { color: var(--crimson); font-style: italic; }
+    .hero-divider {
+      width: 120px; height: 2px;
+      background: var(--gold);
+      margin: 1.8rem auto;
+    }
+    .hero-sub {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .hero-cta {
       display: inline-block;
-      padding: 0.85rem 2.8rem;
-      border: 1px solid var(--gold-dim);
-      color: var(--gold-light);
+      margin-top: 2.2rem;
+      padding: 0.8rem 2.5rem;
+      border: 2px solid var(--gold-deep);
+      background: transparent;
       font-family: 'Cinzel', serif;
       font-size: 0.8rem;
       letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--navy);
       text-decoration: none;
-      text-transform: uppercase;
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1.2s;
+      transition: 0.2s;
+      font-weight: 700;
     }
-    .header-cta:hover {
-      background: rgba(201,168,76,0.1);
+    .hero-cta:hover {
+      background: var(--gold);
       border-color: var(--gold);
-      color: var(--gold-light);
+      color: var(--navy);
     }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1.6s;
-    }
-    .scroll-hint span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.3em;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    .scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(180deg, var(--gold-dim), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-
-    /* ── SECTION BASE ── */
-    section {
-      position: relative;
-      padding: 6rem 2rem;
-      max-width: 1100px;
+    /* ── SECTIONS (parchment cards container) ── */
+    .section-wrap {
+      max-width: 1300px;
       margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .section-card {
+      background: var(--parchment);
+      background-image: linear-gradient(160deg, #f9f2e3 0%, #f0e6ce 100%);
+      border: 1.5px solid var(--border-ornate);
+      box-shadow: 0 2px 12px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+      padding: 32px 28px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .section-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
     }
 
     .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
       letter-spacing: 0.4em;
+      color: var(--gold-deep);
       text-transform: uppercase;
-      color: var(--gold-dim);
-      margin-bottom: 1rem;
+      margin-bottom: 8px;
     }
-
     .section-title {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(1.6rem, 4vw, 2.6rem);
-      font-weight: 600;
-      color: var(--parchment);
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-
-    .section-rule {
-      width: 60px;
-      height: 1px;
-      background: var(--gold);
-      margin-bottom: 2rem;
-    }
-
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-      margin-top: 3rem;
-    }
-
-    .about-body {
-      font-size: 1.1rem;
-      color: var(--text-body);
-      line-height: 1.9;
-    }
-    .about-body p + p { margin-top: 1.2rem; }
-
-    .about-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .stat-item {
-      border-left: 1px solid var(--gold-dim);
-      padding-left: 1.5rem;
-    }
-    .stat-number {
-      font-family: 'Cinzel', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 2.2rem;
       font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
     }
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
-      font-style: italic;
-    }
-
-    /* ── FEATURES ── */
-    .features-section {
-      background: linear-gradient(180deg, transparent, rgba(201,168,76,0.03), transparent);
-      border-top: 1px solid rgba(201,168,76,0.08);
-      border-bottom: 1px solid rgba(201,168,76,0.08);
-      max-width: 100%;
-      padding: 6rem 2rem;
+    .section-rule {
+      width: 70px; height: 2px;
+      background: var(--gold);
+      margin: 20px 0 28px;
     }
 
-    .features-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
+    /* ── FEATURE GRID (royal cards) ── */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-top: 3rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
     }
 
     .feature-card {
-      padding: 2rem;
-      border: 1px solid rgba(201,168,76,0.12);
-      background: rgba(201,168,76,0.02);
-      position: relative;
-      transition: border-color 0.3s, background 0.3s;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 30px; height: 1px;
-      background: var(--gold);
+      padding: 22px 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: var(--parchment);
     }
     .feature-card:hover {
-      border-color: rgba(201,168,76,0.3);
-      background: rgba(201,168,76,0.05);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(10,7,2,0.2);
     }
 
     .feature-icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      opacity: 0.8;
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      color: var(--gold-deep);
     }
-
     .feature-name {
       font-family: 'Cinzel', serif;
       font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--gold-light);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(184,150,46,0.25);
+      padding-bottom: 8px;
     }
-
     .feature-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
       line-height: 1.7;
     }
-
-    /* ── UPDATES SECTION ── */
-    .updates-section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 6rem 2rem;
-    }
-
-    .updates-timeline {
-      position: relative;
-      margin-top: 3rem;
-      padding-left: 2rem;
-    }
-
-    .updates-timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(180deg, var(--gold), var(--gold-dim), transparent);
-    }
-
-    .update-entry {
-      position: relative;
-      margin-bottom: 4rem;
-      padding-left: 2.5rem;
-    }
-
-    .update-entry::before {
-      content: '';
-      position: absolute;
-      left: -2rem;
-      top: 0.5rem;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 12px rgba(201,168,76,0.5);
-      transform: translateX(-3px);
-    }
-
-    .update-version {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.3em;
-      color: var(--gold-dim);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    .update-title {
+    .feature-link {
+      display: inline-block;
+      margin-top: 14px;
       font-family: 'Cinzel', serif;
-      font-size: clamp(1.2rem, 3vw, 1.8rem);
-      font-weight: 600;
-      color: var(--parchment);
-      margin-bottom: 1rem;
-    }
-
-    .update-body {
-      font-size: 1rem;
-      color: var(--text-body);
-      line-height: 1.9;
-      max-width: 680px;
-    }
-    .update-body p + p { margin-top: 1rem; }
-
-    .update-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.5rem;
-    }
-
-    .update-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.58rem;
+      font-size: 0.7rem;
       letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold-dim);
-      border: 1px solid rgba(201,168,76,0.2);
-      padding: 0.3rem 0.75rem;
+      color: var(--crimson);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--crimson);
     }
 
-    .update-showcase {
-      margin-top: 2rem;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      max-width: 680px;
-    }
-
-    .showcase-item {
-      padding: 1.25rem 1.5rem;
-      border: 1px solid rgba(201,168,76,0.1);
-      background: rgba(201,168,76,0.02);
-      position: relative;
-    }
-    .showcase-item::after {
-      content: '';
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 20px; height: 1px;
-      background: var(--gold-dim);
-    }
-
-    .showcase-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.2em;
-      color: var(--gold-dim);
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .showcase-value {
-      font-size: 0.95rem;
-      color: var(--text-body);
-    }
-
-    /* ── TECH ── */
+    /* ── TECH ROWS (parchment style) ── */
     .tech-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-top: 3rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
-
     .tech-row {
       display: flex;
       align-items: baseline;
       gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid rgba(201,168,76,0.08);
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(184,150,46,0.2);
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid var(--border-ornate);
     }
-
+    .tech-row:last-child { border-bottom: none; }
     .tech-key {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Cinzel', serif;
       font-size: 0.7rem;
-      color: var(--gold-dim);
-      letter-spacing: 0.1em;
-      min-width: 120px;
+      letter-spacing: 0.15em;
+      color: var(--gold-deep);
+      min-width: 130px;
+      text-transform: uppercase;
     }
-
     .tech-val {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: var(--text-body);
+      font-weight: 500;
     }
 
-    /* ── PRIVACY ── */
-    .policy-section {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 6rem 2rem;
-    }
-
+    /* ── PRIVACY BOX (parchment + ornate) ── */
     .policy-box {
-      border: 1px solid rgba(201,168,76,0.15);
-      padding: 3rem;
-      background: rgba(201,168,76,0.02);
-      margin-top: 3rem;
+      padding: 28px 30px;
+      margin-top: 20px;
     }
-
     .policy-box h3 {
       font-family: 'Cinzel', serif;
       font-size: 1rem;
-      color: var(--gold);
-      margin: 2rem 0 0.6rem;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+      color: var(--navy);
+      margin: 1.8rem 0 0.6rem;
+      border-bottom: 1px solid var(--border-ornate);
+      padding-bottom: 6px;
     }
-    .policy-box h3:first-child { margin-top: 0; }
-
+    .policy-box h3:first-of-type { margin-top: 0; }
     .policy-box p, .policy-box li {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: var(--text-muted);
       line-height: 1.8;
     }
-
-    .policy-box p + p { margin-top: 0.8rem; }
-
     .policy-box ul {
       list-style: none;
       padding-left: 0;
-      margin-top: 0.5rem;
-    }
-    .policy-box ul li {
-      padding: 0.25rem 0;
     }
     .policy-box ul li::before {
-      content: '— ';
-      color: var(--gold-dim);
+      content: '◆';
+      color: var(--gold-deep);
+      font-size: 10px;
+      margin-right: 12px;
     }
-
     .policy-box a {
-      color: var(--gold);
+      color: var(--crimson);
       text-decoration: none;
-    }
-    .policy-box a:hover { text-decoration: underline; }
-
-    .policy-divider {
-      width: 100%;
-      height: 1px;
-      background: rgba(201,168,76,0.1);
-      margin: 1.5rem 0 0;
+      border-bottom: 1px dotted var(--crimson);
     }
 
-    /* ── FOOTER ── */
+    /* ── FOOTER (navy/gold) ── */
     footer {
-      border-top: 1px solid rgba(201,168,76,0.1);
-      padding: 3rem 2rem;
       text-align: center;
-    }
-
-    .footer-title {
+      padding: 28px;
+      margin-top: 20px;
       font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
       color: var(--gold);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-sub {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-
-    .footer-meta {
-      margin-top: 2rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: rgba(122,109,86,0.5);
       text-transform: uppercase;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1.2rem 3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(201,168,76,0.06);
-    }
-
-    .nav-logo {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      color: var(--gold);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--gold-light); }
-
-    .full-divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent);
-      margin: 0;
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; }
-      50%       { opacity: 1; }
+      border-top: 1px solid rgba(201,168,76,0.2);
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .features-grid { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      nav { flex-direction: column; gap: 12px; padding: 16px; }
+      .nav-links { gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+      .hero { margin: 16px 10px; padding: 2rem 1rem; }
       .tech-grid { grid-template-columns: 1fr; }
-      .policy-box { padding: 2rem 1.5rem; }
-      .update-showcase { grid-template-columns: 1fr; }
-      .updates-timeline { padding-left: 1.5rem; }
-      .update-entry { padding-left: 1.5rem; }
+      .section-card { padding: 24px 16px; }
     }
+
+    /* animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .section-card, .hero, .feature-card { animation: fadeUp 0.5s ease; }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-logo">LEGACY</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#updates">Updates</a></li>
-      <li><a href="#technical">Technical</a></li>
-      <li><a href="#privacy">Privacy</a></li>
-    </ul>
-  </nav>
+<!-- ═══════════════════ ROYAL NAVIGATION ═══════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">L<span>E</span>GACY</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Compendia</a></li>
+    <li><a href="#technical">Technical</a></li>
+    <li><a href="#privacy">Privacy</a></li>
+    <li><a href="egyptian.html" style="color:var(--crimson);">⚡ Physics</a></li>
+  </ul>
+</nav>
 
-  <!-- HERO -->
-  <header>
-    <div class="header-bg"></div>
-    <div class="rule-top"></div>
-    <div class="rule-bottom"></div>
+<!-- ═══════════════════ HERO (parchment) ═══════════════════ -->
+<div class="hero">
+  <div class="hero-eyebrow">Android · Cordova · Royal Compendium</div>
+  <h1>LEGACY <em>·</em> Study</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-sub">Physics & Chemistry reference · adversarial quizzes · cloud sync<br>Forged for NEET / JEE excellence.</p>
+  <a href="#features" class="hero-cta">Explore the Codex</a>
+</div>
 
-    <p class="header-eyebrow">Android Study Companion · Apache Cordova</p>
-    <h1 class="header-title">LEGACY</h1>
-    <div class="header-divider"></div>
-    <p class="header-subtitle">A hybrid study companion forged for competitive examination preparation — chemistry, physics, and performance analytics in one application.</p>
-    <p class="header-platform">Platform: Android SDK 29–34 &nbsp;·&nbsp; Package: com.asphalts001.legacy</p>
-    <a href="#about" class="header-cta">Explore the Application</a>
-
-    <div class="scroll-hint">
-      <div class="scroll-line"></div>
-      <span>Scroll</span>
+<div class="section-wrap">
+  
+  <!-- ═══════════════════ ABOUT ═══════════════════ -->
+  <div class="section-card" id="about">
+    <div class="section-label">01 · The Companion</div>
+    <h2 class="section-title">Built for rigorous preparation</h2>
+    <div class="section-rule"></div>
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; align-items: start;">
+      <div style="font-size:1.1rem; color:var(--text-body);">
+        <p>Legacy is a hybrid Android application (Apache Cordova) delivering a complete study ecosystem: a searchable Chemistry compendium, an exhaustive <strong>Physics formulary & concept codex</strong> (Egyptian HTML), two quiz engines, and real‑time performance analytics.</p>
+        <p style="margin-top:1rem;">All reference material lives inside the app. The Physics compendium — styled as a royal parchment codex — covers mechanics, thermo, electromagnetism, optics, modern physics, graph intuition, and common traps. Access it directly from the navigation bar.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="stat-item" style="border-left:3px solid var(--gold); padding-left:1.2rem;">
+          <div style="font-family:'Cinzel'; font-size:2.2rem; color:var(--navy);">24+</div>
+          <div style="color:var(--text-muted);">JSON question banks</div>
+        </div>
+        <div class="stat-item" style="border-left:3px solid var(--crimson); padding-left:1.2rem;">
+          <div style="font-family:'Cinzel'; font-size:2.2rem; color:var(--navy);">45</div>
+          <div style="color:var(--text-muted);">Adversarial physics traps</div>
+        </div>
+        <div class="stat-item" style="border-left:3px solid var(--gold-deep); padding-left:1.2rem;">
+          <div style="font-family:'Cinzel'; font-size:2.2rem; color:var(--navy);">∞</div>
+          <div style="color:var(--text-muted);">Royal parchment style</div>
+        </div>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <div class="full-divider"></div>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <p class="section-label">01 · Overview</p>
-    <h2 class="section-title">Built for Serious<br/>Examination Preparation</h2>
+  <!-- ═══════════════════ FEATURES (incl. Physics Compendium) ═══════════════════ -->
+  <div class="section-card" id="features">
+    <div class="section-label">02 · Codex & Engines</div>
+    <h2 class="section-title">Everything in the royal library</h2>
     <div class="section-rule"></div>
 
-    <div class="about-grid">
-      <div class="about-body">
-        <p>Legacy is a hybrid Android application built with Apache Cordova, designed as a comprehensive study companion for students preparing for competitive examinations including NEET.</p>
-        <p>The application delivers a richly styled WebView interface combining static reference material, two independent quiz engines, real-time performance tracking, and optional cloud synchronisation — all within a single, self-contained APK.</p>
-        <p>Study sessions are logged, scored, and persisted locally. Progress is surfaced through a live dashboard with accuracy metrics, recent activity feeds, and exportable JSON logs. For multi-device continuity, a manual Supabase cloud sync transfers session data on demand.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Chemistry Compendium</div>
+        <p class="feature-desc">Inorganic, Physical, Organic — tabbed, searchable, with named reactions and mechanism badges.</p>
       </div>
 
-      <div class="about-stats">
-        <div class="stat-item">
-          <div class="stat-number">24</div>
-          <div class="stat-label">External JSON question sets</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">45</div>
-          <div class="stat-label">Adversarial physics trap questions</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Chemistry disciplines covered</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">60 min</div>
-          <div class="stat-label">NEET-scored timed MCQ sessions</div>
-        </div>
+      <!--  PHYSICS COMPENDIUM CARD — links to egyptian.html -->
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Physics Codex <span style="color:var(--crimson);">(Egyptian)</span></div>
+        <p class="feature-desc">Complete formulary: mechanics, thermo, EM, optics, modern, graphs & traps. Royal parchment style with tabs & search.</p>
+        <a href="egyptian.html" class="feature-link">Open the Physics Codex →</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Adversarial Physics</div>
+        <p class="feature-desc">45 hard-coded trap questions, timer, category breakdown. Test your conceptual edge.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">JSON Quiz Factory</div>
+        <p class="feature-desc">24 external question sets, NEET scoring, 60-min sessions, attempt history.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Dashboard & Analytics</div>
+        <p class="feature-desc">Accuracy metrics, activity feed, one‑tap JSON export of your study log.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Cloud Sync · Supabase</div>
+        <p class="feature-desc">Manual push/pull of activity logs. Keep progress consistent across devices.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <div class="feature-name">Background Audio</div>
+        <p class="feature-desc">Cordova Media plugin. Persistent music preference stored per session.</p>
       </div>
     </div>
-  </section>
+  </div>
 
-  <div class="full-divider"></div>
+  <!-- ═══════════════════ TECHNICAL ═══════════════════ -->
+  <div class="section-card" id="technical">
+    <div class="section-label">03 · Architecture</div>
+    <h2 class="section-title">Hybrid · Cordova · Royal</h2>
+    <div class="section-rule"></div>
+    <div class="tech-grid">
+      <div>
+        <div class="tech-row"><span class="tech-key">Framework</span><span class="tech-val">Apache Cordova 12</span></div>
+        <div class="tech-row"><span class="tech-key">Platform</span><span class="tech-val">Android SDK 29–34</span></div>
+        <div class="tech-row"><span class="tech-key">Package</span><span class="tech-val">com.asphalts001.legacy</span></div>
+        <div class="tech-row"><span class="tech-key">Entry</span><span class="tech-val">index.html (WebView)</span></div>
+        <div class="tech-row"><span class="tech-key">Build</span><span class="tech-val">GitHub Actions CI</span></div>
+      </div>
+      <div>
+        <div class="tech-row"><span class="tech-key">Runtime</span><span class="tech-val">Node 18 · JDK 17 · Gradle 8.7</span></div>
+        <div class="tech-row"><span class="tech-key">State</span><span class="tech-val">localStorage (StateManager.js)</span></div>
+        <div class="tech-row"><span class="tech-key">Cloud</span><span class="tech-val">Supabase Edge Functions</span></div>
+        <div class="tech-row"><span class="tech-key">Auth</span><span class="tech-val">Google OAuth 2.0</span></div>
+        <div class="tech-row"><span class="tech-key">Audio Plugin</span><span class="tech-val">cordova-plugin-media ^6.1.0</span></div>
+      </div>
+    </div>
+  </div>
 
-  <!-- FEATURES -->
-  <div class="features-section" id="features">
-    <div class="features-inner">
-      <p class="section-label">02 · Capabilities</p>
-      <h2 class="section-title">Everything in One Place</h2>
-      <div class="section-rule"></div>
+  <!-- ═══════════════════ PRIVACY (content from privacy.html) ═══════════════════ -->
+  <div class="section-card" id="privacy">
+    <div class="section-label">04 · Privacy · Legal</div>
+    <h2 class="section-title">How we handle your data</h2>
+    <div class="section-rule"></div>
+    <p style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; margin-bottom:1rem;">Last updated: April 21, 2026</p>
 
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">⚗️</div>
-          <div class="feature-name">Chemistry Compendium</div>
-          <p class="feature-desc">A searchable, tabbed reference covering Inorganic, Physical, and Organic chemistry with inline search filtering and named-reaction highlights.</p>
-        </div>
+    <div class="policy-box">
+      <h3>1. Overview</h3>
+      <p>Legacy is a hybrid Android study application built with Apache Cordova. This policy explains what data we collect, how we use it, and your rights. We are committed to full transparency.</p>
 
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-name">JSON Quiz Factory</div>
-          <p class="feature-desc">Configurable MCQ runner loading from 24 external JSON question sets. Full NEET scoring, 60-minute sessions, and per-set attempt history.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <div class="feature-name">Adversarial Physics</div>
-          <p class="feature-desc">45 hard-coded trap questions across seven difficulty categories, with a live timer and type-wise performance breakdown after each session.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <div class="feature-name">Dashboard & Analytics</div>
-          <p class="feature-desc">Real-time accuracy metrics, session tracking, recent activity feed, and one-tap JSON export of your complete study log.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">☁️</div>
-          <div class="feature-name">Cloud Sy
+      <h3>2. Information We Collect</h3>
+      <p>When you sign in with Google, we receive from your Google account:</p>
+      <ul>
+        <li>Your name</li>
+        <li>Your email address</li>
+        <li>Your profile picture (if availabl
