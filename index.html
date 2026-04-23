@@ -662,6 +662,133 @@
       color: var(--gold-dim);
     }
 
+    /* ── VERSION HISTORY BUTTON & DROPDOWN ── */
+    .download-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* The main download button sits inside .download-actions, so remove its own margin-top */
+    .download-actions .download-btn {
+      margin-top: 0;
+    }
+
+    /* Clock / version-history icon button */
+    .version-history-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--gold-dim);
+      background: rgba(201,168,76,0.04);
+      color: var(--gold);
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+      flex-shrink: 0;
+    }
+    .version-history-btn:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.1);
+      box-shadow: 0 0 20px rgba(201,168,76,0.12);
+    }
+    .version-history-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    /* Dropdown panel */
+    .version-dropdown {
+      display: none;                        /* toggled by JS — no CSS :hover logic */
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 340px;
+      background: var(--ink-mid);
+      border: 1px solid rgba(201,168,76,0.2);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      z-index: 200;
+      padding: 0;
+      animation: dropIn 0.2s ease;
+    }
+    .version-dropdown.open { display: block; }
+
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Small label at top of dropdown */
+    .version-dropdown-header {
+      padding: 0.7rem 1.2rem 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+
+    /* Each version row */
+    .version-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.6rem 1rem;
+      align-items: baseline;
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.06);
+      transition: background 0.2s;
+      text-decoration: none;       /* rows are <a> tags — links added later */
+      color: inherit;
+      cursor: default;             /* becomes pointer once href is filled in */
+    }
+    .version-item:last-child { border-bottom: none; }
+    .version-item:hover { background: rgba(201,168,76,0.05); }
+
+    .version-item-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    .version-item-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* "Latest" pill on newest entry */
+    .version-pill {
+      display: inline-block;
+      padding: 0.08rem 0.45rem;
+      border: 1px solid rgba(201,168,76,0.45);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      vertical-align: middle;
+      margin-left: 0.4rem;
+      background: rgba(201,168,76,0.06);
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
@@ -719,13 +846,71 @@
       The latest build is always available directly from GitHub Releases. No account required.
     </p>
 
-    <a href="https://github.com/asphalts001/downloads/releases/download/v1.0.98/legacy-v1.0.98.apk"
-       class="download-btn" download>
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/>
-      </svg>
-      Download v1.0.98 APK
-    </a>
+    <!-- Download row: primary APK button + version-history icon side by side -->
+    <div class="download-actions">
+
+      <!-- PRIMARY DOWNLOAD BUTTON — update href when a new release is cut -->
+      <a href="https://github.com/asphalts001/downloads/releases/download/v1.0.99/legacy-v1.0.99.apk"
+         class="download-btn" download>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/>
+        </svg>
+        Download v1.0.99 APK
+      </a>
+
+      <!-- VERSION HISTORY BUTTON — clock icon; opens dropdown on click -->
+      <div class="version-history-btn" id="versionBtn" title="Version history" role="button" aria-expanded="false" aria-controls="versionDropdown">
+        <!-- Clock SVG (Heroicons outline) -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12 7 12 12 15.5 14"/>
+        </svg>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             VERSION HISTORY DROPDOWN
+             To add a download link to a version:
+               1. Find the <a class="version-item"> for that version
+               2. Set  href="YOUR_GITHUB_RELEASE_URL"
+               3. Change  cursor:default  to  cursor:pointer  via the
+                  .version-item style, or add style="cursor:pointer" inline
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="version-dropdown" id="versionDropdown" role="listbox">
+          <div class="version-dropdown-header">Release History</div>
+
+          <!-- ─── v1.0.98 ───────────────────────────────────────────────
+               LINK PLACEHOLDER: replace # with the GitHub release URL
+               e.g. href="https://github.com/asphalts001/downloads/releases/download/v1.0.98/legacy-v1.0.98.apk"
+               ─────────────────────────────────────────────────────────── -->
+          <a class="version-item" href="https://github.com/asphalts001/downloads/releases/download/v1.0.99/legacy-v1.0.99.apk" style="cursor:pointer;" download>
+            <span class="version-item-tag">v1.0.99 <span class="version-pill">Latest</span></span>
+            <span class="version-item-desc">Egyptian Physics Reference Module</span>
+          </a>
+
+          <!-- ─── v1.0.98 ───────────────────────────────────────────────
+               LINK PLACEHOLDER: replace # with the GitHub release URL
+               ─────────────────────────────────────────────────────────── -->
+          <a class="version-item" href="https://github.com/asphalts001/downloads/releases/download/v1.0.98/legacy-v1.0.98.apk">
+            <span class="version-item-tag">v1.0.98</span>
+            <span class="version-item-desc">Cloud Sync &amp; Dashboard Improvements</span>
+          </a>
+
+          <!-- ─── v1.0.80 ───────────────────────────────────────────────
+               LINK PLACEHOLDER: replace # with the GitHub release URL
+               ─────────────────────────────────────────────────────────── -->
+          <a class="version-item" href="#">
+            <span class="version-item-tag">v1.0.80</span>
+            <span class="version-item-desc"> &amp; Background Music</span>
+          </a>
+
+          <!-- ─── ADD NEW VERSIONS BELOW THIS LINE ──────────────────────
+               Copy one <a class="version-item"> block and fill in:
+                 version tag, short description, and href link.
+               ─────────────────────────────────────────────────────────── -->
+
+        </div><!-- /version-dropdown -->
+      </div><!-- /version-history-btn -->
+
+    </div><!-- /download-actions -->
 
     <p class="download-notice">
       <span class="notice-icon">⚠</span>
@@ -1018,6 +1203,44 @@
     <p class="footer-sub">A hybrid study companion for serious examination preparation</p>
     <p class="footer-meta">© 2026 asphalts001 · Apache Cordova · Android SDK 29–34 · com.asphalts001.legacy</p>
   </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       VERSION HISTORY DROPDOWN — toggle script
+       The dropdown opens/closes when the clock icon is clicked.
+       Clicking anywhere outside the button also closes it.
+       No libraries required — plain vanilla JS.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      const btn      = document.getElementById('versionBtn');
+      const dropdown = document.getElementById('versionDropdown');
+
+      if (!btn || !dropdown) return;
+
+      /* Toggle open / closed */
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      /* Close when clicking anywhere else on the page */
+      document.addEventListener('click', function (e) {
+        if (!btn.contains(e.target)) {
+          dropdown.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      /* Close on Escape key */
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          dropdown.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
