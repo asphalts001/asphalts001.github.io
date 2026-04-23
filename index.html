@@ -346,6 +346,100 @@
       color: var(--text-body);
     }
 
+    /* ── ARCHITECTURE DEEP DIVE ── */
+    .arch-trigger-wrap {
+      margin-top: 2.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .arch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 2rem;
+      border: 1px solid var(--gold-dim);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .arch-btn:hover {
+      background: rgba(201,168,76,0.07);
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(201,168,76,0.1);
+    }
+    .arch-btn svg {
+      width: 13px; height: 13px;
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 1.5;
+      transition: transform 0.35s ease;
+      flex-shrink: 0;
+    }
+    .arch-btn.open svg { transform: rotate(180deg); }
+
+    .arch-panel {
+      display: none;
+      margin-top: 2.5rem;
+      animation: fadeUp 0.4s ease;
+    }
+    .arch-panel.visible { display: block; }
+
+    /* mermaid diagram wrapper */
+    .arch-diagram {
+      border: 1px solid rgba(201,168,76,0.12);
+      background: rgba(201,168,76,0.015);
+      padding: 2rem 1rem;
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+    }
+    .arch-diagram .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* written sections below the diagram */
+    .arch-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 640px) { .arch-notes { grid-template-columns: 1fr; } }
+
+    .arch-note {
+      border-left: 1px solid rgba(201,168,76,0.2);
+      padding: 0.1rem 0 0.1rem 1.2rem;
+    }
+
+    .arch-note-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.45rem;
+    }
+
+    .arch-note p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .arch-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gold);
+      background: rgba(201,168,76,0.06);
+      padding: 0.1rem 0.4rem;
+      border: 1px solid rgba(201,168,76,0.12);
+    }
+
     /* ── PRIVACY / POLICY ── */
     .policy-section {
       max-width: 720px;
@@ -800,6 +894,7 @@
       .update-entry { grid-template-columns: 1fr; gap: 0.75rem; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -918,11 +1013,11 @@
     </p>
   </div>
 
-  <div class="full-divider"></div
+  <div class="full-divider"></div>
   <!-- ABOUT -->
   <section id="about">
     <p class="section-label">01 · Overview</p>
-    <h2 class="section-title">Built for Serious<br/>Examination Preparation</h2>
+    <h2 class="section-title">Built for Efficiency</h2>
     <div class="section-rule"></div>
 
     <div class="about-grid">
@@ -1055,6 +1150,123 @@
         </div>
       </div>
     </div>
+
+    <!-- GO DEEPER BUTTON -->
+    <div class="arch-trigger-wrap">
+      <button class="arch-btn" id="archBtn" aria-expanded="false">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        Go Deeper in Architecture
+      </button>
+    </div>
+
+    <!-- ARCHITECTURE DEEP-DIVE PANEL -->
+    <div class="arch-panel" id="archPanel" role="region" aria-label="Architecture deep dive">
+
+      <div class="arch-diagram">
+        <div class="mermaid">
+flowchart TD
+    UI["Quiz Complete<br/>(phiross_factory.html)"]
+    TR["tracker.js<br/>NEET scoring — session object — tracker:update"]
+    SM["StateManager.js<br/>localStorage — app_state key"]
+    DB[("localStorage")]
+    SY["sync.js<br/>auto-sync loop — PUT /sync-api"]
+    SB[("Supabase<br/>Edge Function")]
+    DA["Dashboard<br/>index.html<br/>listens — tracker:update"]
+
+    UI --> TR
+    TR --> SM
+    TR --> DA
+    SM --> DB
+    SY --> SB
+    DB -.->|"on demand / hourly"| SY
+
+    style UI fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style TR fill:#1a1a24,stroke:#c9a84c,color:#d4c4a0
+    style SM fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style DB fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
+    style SY fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style SB fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
+    style DA fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+        </div>
+      </div>
+
+      <div class="arch-notes">
+
+        <div class="arch-note">
+          <p class="arch-note-title">tracker.js</p>
+          <p>Middleware layer. Receives raw quiz totals, applies strict NEET (+4 / −1) scoring, and fires a <span class="arch-code">tracker:update</span> DOM event so the dashboard re-renders without a page reload.</p>
+        </div>
+
+        <div class="arch-note">
+          <p class="arch-note-title">StateManager.js</p>
+          <p>Synchronous wrapper around <span class="arch-code">localStorage</span>. Enforces a versioned JSON schema (<span class="arch-code">version · sessions · stats</span>) and persists the full state under a single <span class="arch-code">app_state</span> key.</p>
+        </div>
+
+        <div class="arch-note">
+          <p class="arch-note-title">sync.js</p>
+          <p>Runs asynchronously. Serialises state and pushes to a Supabase Edge Function via PUT. An hourly background loop keeps the cloud copy current while a user session is active. Also intercepts the <span class="arch-code">legacy://login</span> deep-link on OAuth return to establish the Supabase session.</p>
+        </div>
+
+        <div class="arch-note">
+          <p class="arch-note-title">CI / CD</p>
+          <p>GitHub Actions on Ubuntu. Node 18 · JDK 17 · Gradle 8.7 · Android SDK 34. Cordova platform and plugins installed at build time. APK signed via <span class="arch-code">apksigner</span> using a base64 keystore from Secrets, then attached to a tagged GitHub Release automatically.</p>
+        </div>
+
+        <div class="arch-note">
+          <p class="arch-note-title">Auth &amp; Deep Linking</p>
+          <p>Google OAuth via Supabase, opened through <span class="arch-code">InAppBrowser</span> to bypass WebView restrictions. On success, Google redirects to <span class="arch-code">legacy://login</span> — declared in <span class="arch-code">config.xml</span> — where <span class="arch-code">sync.js</span> extracts tokens and opens the session.</p>
+        </div>
+
+        <div class="arch-note">
+          <p class="arch-note-title">Roadmap</p>
+          <p>This WebView layer is the foundation. The migration path to native Kotlin / Jetpack Compose is direct — <span class="arch-code">StateManager.js</span> → Room Database, DOM events → ViewModels + StateFlows.</p>
+        </div>
+
+      </div>
+
+      <!-- AUTH + CLOUD SYNC DIAGRAM -->
+      <p class="arch-note-title" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dim);margin:2.5rem 0 0.6rem;">Auth &amp; Cloud Sync — Full Data Path</p>
+      <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem;">
+        This diagram traces the complete auth and sync lifecycle. Login triggers Google OAuth through <span class="arch-code">InAppBrowser</span>, which hands a JWT back to <span class="arch-code">sync.js</span>. Study data accumulates in <span class="arch-code">localStorage</span> (<span class="arch-code">studyapp_log</span>) and is pushed to a Supabase Edge Function either manually or on an hourly background timer. The edge function writes to the <span class="arch-code">user_sync_data</span> PostgreSQL table using the service role, while Row-Level Security (<span class="arch-code">auth.uid() = user_id</span>) ensures no cross-user data leakage.
+      </p>
+      <div class="arch-diagram">
+        <div class="mermaid">
+flowchart TD
+    subgraph Device[Your Device]
+        AUTH_UI["Auth UI<br/>Login / Signup Form"]
+        BG_TIMER["Background Timer<br/>Auto-sync every hour"]
+        SYNC["sync.js<br/>Client Sync Logic"]
+        LS[("localStorage<br/>studyapp_log")]
+    end
+
+    subgraph Supa[Supabase]
+        SB_AUTH["Supabase Auth<br/>Email/Password + JWT"]
+        EDGE["Edge Function<br/>sync-api"]
+        PG[("PostgreSQL<br/>user_sync_data")]
+        RLS["RLS Policies<br/>auth.uid = user_id"]
+    end
+
+    AUTH_UI --> SB_AUTH
+    SB_AUTH -->|"JWT Session"| SYNC
+    BG_TIMER --> SYNC
+    SYNC --> LS
+    SYNC -->|"Push / Pull"| EDGE
+    EDGE -->|"Service Role"| PG
+    PG --> RLS
+
+    style AUTH_UI  fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style BG_TIMER fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style SYNC     fill:#1a1a24,stroke:#c9a84c,color:#d4c4a0
+    style LS       fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
+    style SB_AUTH  fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style EDGE     fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    style PG       fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
+    style RLS      fill:#0a0a0f,stroke:#c9a84c,color:#d4c4a0
+        </div>
+      </div>
+
+    </div><!-- /arch-panel -->
+
   </section>
 
   <div class="full-divider"></div>
@@ -1210,6 +1422,46 @@
        Clicking anywhere outside the button also closes it.
        No libraries required — plain vanilla JS.
        ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+    /* ── MERMAID ── */
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        background:       '#0a0a0f',
+        primaryColor:     '#1a1a24',
+        primaryBorderColor: '#8a6f2e',
+        primaryTextColor: '#d4c4a0',
+        lineColor:        '#8a6f2e',
+        secondaryColor:   '#0a0a0f',
+        tertiaryColor:    '#0a0a0f',
+        edgeLabelBackground: '#0a0a0f',
+        fontFamily:       'JetBrains Mono, monospace',
+        fontSize:         '12px',
+        nodeBorder:       '#8a6f2e',
+      }
+    });
+
+    /* ── ARCHITECTURE DEEP DIVE ── */
+    (function () {
+      const btn   = document.getElementById('archBtn');
+      const panel = document.getElementById('archPanel');
+      if (!btn || !panel) return;
+      let rendered = false;
+
+      btn.addEventListener('click', function () {
+        const isOpen = panel.classList.toggle('visible');
+        btn.classList.toggle('open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (isOpen && !rendered) {
+          mermaid.run({ nodes: panel.querySelectorAll('.mermaid') });
+          rendered = true;
+        }
+        if (isOpen) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    })();
+  </script>
+
   <script>
     (function () {
       const btn      = document.getElementById('versionBtn');
