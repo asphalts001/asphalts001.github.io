@@ -1170,103 +1170,89 @@
       <div class="arch-diagram">
         <div class="mermaid">
 flowchart TD
-    UI["Quiz Complete<br/>(phiross_factory.html)"]
-    TR["tracker.js<br/>NEET scoring — session object — tracker:update"]
-    SM["StateManager.js<br/>localStorage — app_state key"]
-    DB[("localStorage")]
-    SY["sync.js<br/>auto-sync loop — PUT /sync-api"]
-    SB[("Supabase<br/>Edge Function")]
-    DA["Dashboard<br/>index.html<br/>listens — tracker:update"]
-
-    UI --> TR
-    TR --> SM
-    TR --> DA
-    SM --> DB
-    SY --> SB
-    DB -.->|"on demand / hourly"| SY
-
-    style UI fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style TR fill:#1a1a24,stroke:#c9a84c,color:#d4c4a0
-    style SM fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style DB fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
-    style SY fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style SB fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
-    style DA fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
+    A[Quiz Complete] --> B[Scoring Engine\nApplies marking scheme · Builds session object · Fires update event]
+    B --> C[State Manager\nVersioned local persistence]
+    B --> D[Dashboard\nListens for update event · Re-renders reactively]
+    C --> E[(Local Storage)]
+    E -.->|on demand / hourly| F[Sync Module\nBackground auto-sync · Authenticated API call]
+    F --> G[(Cloud Backend\nEdge Function)]
         </div>
       </div>
 
-      <div class="arch-notes">
+<div class="arch-notes">
 
-        <div class="arch-note">
-          <p class="arch-note-title">tracker.js</p>
-          <p>Middleware layer. Receives raw quiz totals, applies strict NEET (+4 / −1) scoring, and fires a <span class="arch-code">tracker:update</span> DOM event so the dashboard re-renders without a page reload.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">Architecture Overview</p>
+    <p>The application is built on a modular JavaScript layer running inside a native Android WebView, with clearly separated concerns across scoring, state management, and cloud synchronisation.</p>
+  </div>
 
-        <div class="arch-note">
-          <p class="arch-note-title">StateManager.js</p>
-          <p>Synchronous wrapper around <span class="arch-code">localStorage</span>. Enforces a versioned JSON schema (<span class="arch-code">version · sessions · stats</span>) and persists the full state under a single <span class="arch-code">app_state</span> key.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">Scoring Engine</p>
+    <p>A dedicated middleware module processes raw quiz responses and applies domain-specific scoring logic before dispatching update events to the dashboard. The UI re-renders reactively without page reloads, keeping the experience fluid.</p>
+  </div>
 
-        <div class="arch-note">
-          <p class="arch-note-title">sync.js</p>
-          <p>Runs asynchronously. Serialises state and pushes to a Supabase Edge Function via PUT. An hourly background loop keeps the cloud copy current while a user session is active. Also intercepts the <span class="arch-code">legacy://login</span> deep-link on OAuth return to establish the Supabase session.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">State Management</p>
+    <p>Application state is persisted locally using a versioned schema, ensuring forward compatibility as the data model evolves. All session and performance data is stored under a single namespaced key, with schema validation on every read and write.</p>
+  </div>
 
-        <div class="arch-note">
-          <p class="arch-note-title">CI / CD</p>
-          <p>GitHub Actions on Ubuntu. Node 18 · JDK 17 · Gradle 8.7 · Android SDK 34. Cordova platform and plugins installed at build time. APK signed via <span class="arch-code">apksigner</span> using a base64 keystore from Secrets, then attached to a tagged GitHub Release automatically.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">Cloud Synchronisation</p>
+    <p>State is serialised and synced to a secure cloud backend via authenticated API calls. A background process maintains sync integrity throughout active sessions, with both automatic and on-demand sync supported.</p>
+  </div>
 
-        <div class="arch-note">
-          <p class="arch-note-title">Auth &amp; Deep Linking</p>
-          <p>Google OAuth via Supabase, opened through <span class="arch-code">InAppBrowser</span> to bypass WebView restrictions. On success, Google redirects to <span class="arch-code">legacy://login</span> — declared in <span class="arch-code">config.xml</span> — where <span class="arch-code">sync.js</span> extracts tokens and opens the session.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">Authentication</p>
+    <p>User authentication is handled via Google OAuth, routed through a secure browser context to ensure compatibility with modern WebView security policies. On successful login, tokens are captured and a persistent cloud session is established automatically.</p>
+  </div>
 
-        <div class="arch-note">
-          <p class="arch-note-title">Roadmap</p>
-          <p>This WebView layer is the foundation. The migration path to native Kotlin / Jetpack Compose is direct — <span class="arch-code">StateManager.js</span> → Room Database, DOM events → ViewModels + StateFlows.</p>
-        </div>
+  <div class="arch-note">
+    <p class="arch-note-title">CI / CD Pipeline</p>
+    <p>Builds run on GitHub Actions using a reproducible environment (Node 18, JDK 17, Gradle 8.7, Android SDK 34). APKs are signed with a securely stored keystore and automatically attached to tagged releases.</p>
+  </div>
 
-      </div>
+  <div class="arch-note">
+    <p class="arch-note-title">Security</p>
+    <p>Cloud data storage enforces row-level security, ensuring each user can only access their own records. No cross-user data access is possible at the database level.</p>
+  </div>
 
-      <!-- AUTH + CLOUD SYNC DIAGRAM -->
-      <p class="arch-note-title" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dim);margin:2.5rem 0 0.6rem;">Auth &amp; Cloud Sync — Full Data Path</p>
-      <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem;">
-        This diagram traces the complete auth and sync lifecycle. Login triggers Google OAuth through <span class="arch-code">InAppBrowser</span>, which hands a JWT back to <span class="arch-code">sync.js</span>. Study data accumulates in <span class="arch-code">localStorage</span> (<span class="arch-code">studyapp_log</span>) and is pushed to a Supabase Edge Function either manually or on an hourly background timer. The edge function writes to the <span class="arch-code">user_sync_data</span> PostgreSQL table using the service role, while Row-Level Security (<span class="arch-code">auth.uid() = user_id</span>) ensures no cross-user data leakage.
-      </p>
+  <div class="arch-note">
+    <p class="arch-note-title">Migration Path</p>
+    <p>The current architecture is designed with native migration in mind. The local state layer maps directly to a Room Database, and the existing event-driven UI model translates naturally to ViewModels and StateFlows in Jetpack Compose.</p>
+  </div>
+
+</div>
+
+<!-- AUTH + CLOUD SYNC DIAGRAM -->
+<p class="arch-note-title" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dim);margin:2.5rem 0 0.6rem;">Auth &amp; Cloud Sync — Full Data Path</p>
+<p style="font-size:0.88rem;color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem;">
+  This diagram traces the complete authentication and synchronisation lifecycle. 
+  Login is handled via Google OAuth 2.0, routed through a secure browser context 
+  to satisfy modern WebView security requirements. On successful authorisation, a 
+  signed session token is returned to the sync module and used for all subsequent 
+  authenticated requests. Study data is persisted locally and pushed to a secure 
+  cloud endpoint either on demand or via an hourly background process. The backend 
+  validates each request against the authenticated session before writing to the 
+  user data store, with row-level access controls ensuring strict per-user data 
+  isolation at the database layer.
+</p>
       <div class="arch-diagram">
         <div class="mermaid">
 flowchart TD
-    subgraph Device[Your Device]
-        AUTH_UI["Auth UI<br/>Login / Signup Form"]
-        BG_TIMER["Background Timer<br/>Auto-sync every hour"]
-        SYNC["sync.js<br/>Client Sync Logic"]
-        LS[("localStorage<br/>studyapp_log")]
+    subgraph Device
+        A[Auth UI\nLogin / Signup] --> B[Sync Module\nClient Sync Logic]
+        C[Background Timer\nAuto-sync every hour] --> B
+        B <-->|Push / Pull| D[(Local Storage)]
     end
 
-    subgraph Supa[Supabase]
-        SB_AUTH["Supabase Auth<br/>Email/Password + JWT"]
-        EDGE["Edge Function<br/>sync-api"]
-        PG[("PostgreSQL<br/>user_sync_data")]
-        RLS["RLS Policies<br/>auth.uid = user_id"]
+    subgraph Cloud
+        E[Auth Service\nOAuth 2.0 + JWT] -->|Session Token| B
+        B --> F[API Gateway\nSecure Edge Function]
+        F --> G[(Database\nUser Data Store)]
+        G --> H[Access Control\nRow-Level Security · Per-user isolation]
     end
 
-    AUTH_UI --> SB_AUTH
-    SB_AUTH -->|"JWT Session"| SYNC
-    BG_TIMER --> SYNC
-    SYNC --> LS
-    SYNC -->|"Push / Pull"| EDGE
-    EDGE -->|"Service Role"| PG
-    PG --> RLS
-
-    style AUTH_UI  fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style BG_TIMER fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style SYNC     fill:#1a1a24,stroke:#c9a84c,color:#d4c4a0
-    style LS       fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
-    style SB_AUTH  fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style EDGE     fill:#1a1a24,stroke:#8a6f2e,color:#d4c4a0
-    style PG       fill:#0a0a0f,stroke:#8a6f2e,color:#7a6d56
-    style RLS      fill:#0a0a0f,stroke:#c9a84c,color:#d4c4a0
+    A --> E
         </div>
       </div>
 
